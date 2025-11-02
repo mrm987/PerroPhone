@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페로의 스마트폰</title> <!-- [v6.12] 타이틀 수정 -->
+
+    <!-- (프리로드 링크 ... v6.7과 동일) -->
+    <!-- [v5.4] 이미지 프리로딩 --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/5c2d38cc-5339-420c-ac05-ee6d1034312c.jpeg"> <!-- curious (default) --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/1b5eefa5-d595-4ec6-83d8-95d4dda199e1.jpeg"> <!-- smile --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/3b49664e-46ec-49c1-8972-ce6e9d76ffb8.jpeg"> <!-- happy --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/c6f70f02-424a-4617-8592-b075e4cc4aa3.jpeg"> <!-- fearful --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/6bdf27e1-85e8-4950-8065-5d9119974f3e.jpeg"> <!-- angry --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/7e32d9a5-b495-473b-9483-55cf632c0694.jpeg"> <!-- serious --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/b7cced60-0c2e-4676-87d4-23ee2eaf2fab.jpeg"> <!-- shy --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/f1221102-c991-4935-a333-55b8456abd43.jpeg"> <!-- sleepy --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/383df272-35f8-454d-8c47-fcefe0f59f3e.jpeg"> <!-- embarrased --><!-- [v6.3] 새 갤러리 이미지 프리로딩 --><link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/4ebb1d35-3d23-4847-88ca-da4cea8dbe7c.jpeg">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/06928558-39bf-4f97-82dc-ef253251946f.png">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/70b6d548-c512-4130-bdb6-a702740f1668.png">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/23bc73e5-8b23-4acf-b7b5-be0be8784c57.png">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/e61c85ae-b502-40bc-b2c6-45858eeef0db.png">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/30a93d41-851b-411c-967f-a68075a5e7a1.jpeg">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/680467da-a19c-4dff-a01d-c7b54bc52c4e.jpeg">
+    <link rel="preload" as="image" href="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/3fe4dfe7-544a-410e-a078-b452c68272c2.jpeg">
+
+
+    <style>
+        /* (CSS 스타일... v6.2와 동일) */
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Gulim', 'Dotum', sans-serif; background-color: #111; color: #eee; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        /* [v6.12] aspect-ratio 제거 */
+        #game-wrapper { width: 100%; height: 100%; max-width: 450px; background-color: #0a0a2a; border: 2px solid #a0a0e0; border-radius: 20px; box-shadow: 0 0 20px rgba(150, 150, 255, 0.3); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        #phone-hud { width: 100%; height: 25px; background-color: #1a1a3a; border-bottom: 1px solid #3a3a5a; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #a0a0e0; flex-shrink: 0; }
+        #pherro-view { aspect-ratio: 1344 / 768; width: 100%; background: #1a1a3a url('https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/5c2d38cc-5339-420c-ac05-ee6d1034312c.jpeg') no-repeat center center; background-size: contain; padding: 8px; flex-shrink: 0; border-bottom: 1px solid #3a3a5a; transition: background-image 0.3s ease-in-out; }
+        #pherro-bubble-container { height: 80px; padding: 10px; display: flex; align-items: center; justify-content: flex-start; flex-shrink: 0; border-bottom: 2px solid #3a3a5a; background-color: #1a1a3a; }
+        .pherro-bubble { background-color: #3a3a5a; padding: 12px; border-radius: 10px; font-size: 14px; max-width: 90%; word-wrap: break-word; }
+        #main-screen { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        
+        #homescreen { flex-grow: 1; padding: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; background-color: #0a0a2a; overflow-y: auto; justify-items: center; align-content: start; }
+        .icon { text-align: center; cursor: pointer; color: white; font-size: 12px; z-index: 5; position: relative; width: 60px; }
+        .icon img { width: 50px; height: 50px; border-radius: 10px; border: 1px solid #555; margin-bottom: 5px; }
+        .icon span { display: block; background-color: rgba(0, 0, 0, 0.5); padding: 2px 0; border-radius: 3px; word-break: break-word; }
+        
+        .app-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a3a; flex-direction: column; z-index: 200; }
+        .app-header { background-color: #3a3a5a; padding: 8px 15px; display: flex; align-items: center; font-size: 16px; flex-shrink: 0; }
+        .app-back-button { cursor: pointer; font-weight: bold; font-size: 20px; margin-right: 15px; line-height: 1; }
+        .app-content { padding: 15px; flex-grow: 1; overflow-y: auto; }
+        .app-content img { width: 100%; height: auto; display: block; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 5px; }
+        .app-content-nopadding { flex-grow: 1; overflow-y: auto; overflow-x: hidden; }
+        .app-list { list-style: none; padding: 0; margin: 0; }
+        .app-list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #3a3a5a; font-size: 16px; cursor: pointer; }
+        .app-list-item:hover { background-color: #3a3a5a; }
+        .app-list-item img { width: 40px; height: 40px; border-radius: 5px; margin-right: 15px; }
+        #gallery-list-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 5px; }
+        .gallery-item { width: 100%; aspect-ratio: 1 / 1; background-color: #2a2a4a; cursor: pointer; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        .chat-bubble { padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 80%; clear: both; }
+        .chat-bubble.lapin { background-color: #2a2a4a; float: left; }
+        .chat-bubble.pherro { background-color: #a0a0e0; color: #111; float: right; }
+        .image-memo { background-color: #2a2a4a; border: 1px dashed #5a5a7a; padding: 10px; margin-top: 15px; border-radius: 5px; font-size: 14px; color: #ccc; line-height: 1.6; }
+        .image-memo strong { color: #a0a0e0; display: block; margin-bottom: 5px; }
+
+        /* [v6.10] '작전시작' 앱 스타일 추가 */
+        .intro-text { font-size: 16px; line-height: 1.6; color: #ddd; background-color: #2a2a4a; padding: 15px; border-radius: 5px; }
+        .link-button { display: block; background-color: #a0a0e0; color: #111; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center; margin-top: 30px; }
+        .link-button:hover { background-color: #c0c0ff; }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper">
+        <div id="phone-hud">
+            <span>13:30</span>
+            <span>🔋 85%</span>
+        </div>
+        <div id="pherro-view"></div>
+        <div id="pherro-bubble-container"></div>
+        <div id="main-screen"> 
+            <div id="homescreen">
+                <div class="icon" id="icon-memo"><img src="https://placehold.co/50x50/f0f0f0/000000?text=MEMO" alt="Memo app"><span>메모장</span></div>
+                <div class="icon" id="icon-gallery"><img src="https://placehold.co/50x50/a0a0ff/ffffff?text=GALLERY" alt="Gallery app"><span>갤러리</span></div>
+                <div class="icon" id="icon-messenger"><img src="https://placehold.co/50x50/ffff44/000000?text=TALK" alt="Messenger app"><span>메신저</span></div>
+                <!-- [v6.10] '작전시작' 아이콘 추가 -->
+                <div class="icon" id="icon-start-op"><img src="https://placehold.co/50x50/ff4444/ffffff?text=GO!" alt="Start Op app"><span>작전시작</span></div>
+            </div>
+
+            <!-- 1. 메모장 앱 (v6.9와 동일) --><div class="app-screen" id="app-memo">
+                <div class="app-header"><span class="app-back-button" id="close-memo">&lt;</span><span>메모장</span></div>
+                <div class="app-content-nopadding">
+                    <ul class="app-list">
+                        <li class="app-list-item" id="memo-item-failure"><img src="https://placehold.co/40x40/f0f0f0/000?text=T" alt="txt">실패_보고서.txt</li>
+                        <li class="app-list-item" id="memo-item-mystery"><img src="https://placehold.co/40x40/f0f0f0/000?text=T" alt="txt">3대_미스터리.txt</li>
+                        <li class="app-list-item" id="memo-item-vault"><img src="https://placehold.co/40x40/f0f0f0/000?text=T" alt="txt">7층_금고_비번(추정).txt</li>
+                        <li class="app-list-item" id="memo-item-diary"><img src="https://placehold.co/40x40/ffc0cb/000?text=D" alt="diary">비밀 일기장 (잠금)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="app-screen" id="app-memo-content">
+                <div class="app-header"><span class="app-back-button" id="close-memo-content">&lt;</span><span id="memo-content-title"></span></div>
+                <div class="app-content" id="memo-content-body"></div>
+            </div>
+
+            <!-- 2. 갤러리 앱 (v6.7과 동일) --><div class="app-screen" id="app-gallery">
+                <div class="app-header"><span class="app-back-button" id="close-gallery">&lt;</span><span>갤러리</span></div>
+                <div class="app-content-nopadding">
+                    <div id="gallery-list-container">
+                        <div class="gallery-item" id="gallery-item-onsen"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/4ebb1d35-3d23-4847-88ca-da4cea8dbe7c.jpeg" alt="onsen"></div>
+                        <div class="gallery-item" id="gallery-item-mirage"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/06928558-39bf-4f97-82dc-ef253251946f.png" alt="mirage"></div>
+                        <div class="gallery-item" id="gallery-item-academy-shy"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/70b6d548-c512-4130-bdb6-a702740f1668.png" alt="academy shy"></div>
+                        <div class="gallery-item" id="gallery-item-academy-confident"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/23bc73e5-8b23-4acf-b7b5-be0be8784c57.png" alt="academy confident"></div>
+                        <div class="gallery-item" id="gallery-item-fennec"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/e61c85ae-b502-40bc-b2c6-45858eeef0db.png" alt="fennec"></div>
+                        <div class="gallery-item" id="gallery-item-sexy"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/30a93d41-851b-411c-967f-a68075a5e7a1.jpeg" alt="sexy"></div>
+                        <div class="gallery-item" id="gallery-item-lapin-fishing"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/680467da-a19c-4dff-a01d-c7b54bc52c4e.jpeg" alt="lapin fishing"></div>
+                        <div class="gallery-item" id="gallery-item-mirage-selca"><img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/3fe4dfe7-544a-410e-a078-b452c68272c2.jpeg" alt="mirage selca"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-screen" id="app-gallery-detail">
+                <div class="app-header"><span class="app-back-button" id="close-gallery-detail">&lt;</span><span id="gallery-detail-title"></span></div>
+                <div class="app-content" id="gallery-detail-content">
+                    <!-- JS가 여기에 img와 memo div를 생성 --></div>
+            </div>
+
+            <!-- 3. 메신저 앱 (v6.8과 동일) --><div class="app-screen" id="app-messenger">
+                <div class="app-header"><span class="app-back-button" id="close-messenger">&lt;</span><span>메신저</span></div>
+                <div class="app-content-nopadding">
+                    <ul class="app-list">
+                        <li class="app-list-item" id="messenger-item-lapin">
+                            <img src="https://placehold.co/40x40/a0e0a0/000?text=R" alt="Lapin">
+                            <div><b>정보원_라핀</b><p style="font-size: 12px; color: #999; margin: 0;">페로: 이 너구리가!!</p></div>
+                        </li>
+                        <li class="app-list-item" id="messenger-item-team">
+                            <img src="https://placehold.co/40x40/1e3a8a/fff?text=P" alt="Team">
+                            <div><b>미라쥬 체포 작전반 (3)</b><p style="font-size: 12px; color: #999; margin: 0;">페로: 2팀!! 대답 안 해?!?</p></div>
+                        </li>
+                        <li class="app-list-item" id="messenger-item-mirage">
+                            <img src="https://placehold.co/40x40/ff0000/fff?text=?" alt="Unknown">
+                            <div><b>???</b><p style="font-size: 12px; color: #ff8888; margin: 0;">(읽지 않은 메시지: 1)</p></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="app-screen" id="app-messenger-chat">
+                <div class="app-header"><span class="app-back-button" id="close-messenger-chat">&lt;</span><span id="messenger-chat-title"></span></div>
+                <div class="app-content" id="messenger-chat-content">
+                    <!-- JS가 여기에 chat-bubble div들을 생성 --></div>
+            </div>
+
+            <!-- [v6.10] '작전시작' 앱 화면 추가 --><div class="app-screen" id="app-start-op">
+                <div class="app-header"><span class="app-back-button" id="close-start-op">&lt;</span><span>작전시작</span></div>
+                <div class="app-content">
+                    <div class="intro-text">
+                        도시를 뒤흔드는 괴도 미라쥬, 그녀를 쫓는 경찰 대장 페로.
+                        <br><br>
+                        3일 안에 미라쥬를 체포하지 못하면, 도시는 영원한 밤에 잠긴다!
+                    </div>
+                    <a href="https://share.crack.wrtn.ai/v4gsa7" target="_blank" class="link-button">
+                        스토리챗 하러 가기
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- [v5.0] 페로 스프라이트 DB ---
+        const pherroSprites = {
+            'default': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/5c2d38cc-5339-420c-ac05-ee6d1034312c.jpeg', // curious
+            'smile': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/1b5eefa5-d595-4ec6-83d8-95d4dda199e1.jpeg',
+            'happy': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/3b49664e-46ec-49c1-8972-ce6e9d76ffb8.jpeg',
+            'fearful': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/c6f70f02-424a-4617-8592-b075e4cc4aa3.jpeg',
+            'angry': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/6bdf27e1-85e8-4950-8065-5d9119974f3e.jpeg',
+            'serious': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/7e32d9a5-b495-473b-9483-55cf632c0694.jpeg',
+            'shy': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/b7cced60-0c2e-4676-87d4-23ee2eaf2fab.jpeg',
+            'sleepy': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/f1221102-c991-4935-a333-55b8456abd43.jpeg',
+            'embarrased': 'https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/383df272-35f8-454d-8c47-fcefe0f59f3e.jpeg'
+        };
+
+        // --- [v6.11] 페로 반응 DB 수정 ---
+        const pherroReactions = {
+            'trigger_first_visit': { text: "Zzz... 으... 내 폰... 왜 켜졌지...", emotion: "sleepy" },
+            'trigger_return_home': { text: "홈 화면은 이제 그만 봐도 되는데...", emotion: "curious" },
+            'trigger_memo_open': { text: "어? 메모장? 거기엔 별거 없을 텐데...", emotion: "sleepy" },
+            'trigger_failure': { text: "아악!! 그건 왜 열어봐! 지, 지웠는데 왜 아직 있어! 당장 닫아!!", emotion: "embarrased" },
+            'trigger_mystery_file': { text: "응? 그 파일은 뭐야? ...코넬 형사? 난 모르는 이름인데?", emotion: "curious" },
+            'trigger_vault_note': { text: "이, 이건 왜 봐! ...내가 까먹을까 봐 적어둔 것뿐이야!", emotion: "shy" },
+            'trigger_gallery_open': { text: "갤러리? 왜...!? 저, 저 사진은!", emotion: "curious" },
+            'trigger_messenger_open': { text: "흥. 그 너구리... 랑은 무슨 할 말이 있다고.", emotion: "serious" },
+            'trigger_lapin_chat': { text: "칫, 저 너구리... 맨날 귀찮대.", emotion: "angry" },
+            'trigger_team_chat': { text: "다들 긴장감이 부족해! 나만 바쁘지!", emotion: "angry" },
+            'trigger_mirage_chat': { text: "뭐, 뭐야! 이 발신자 불명은...!! ...설마... 저 괴냥이 아니야?!", emotion: "angry" },
+            'trigger_diary': { text: "이, 이건...!! 넌, 넌 이걸 어떻게 연 거야! 보지 마!! 당장 덮어!!!", emotion: "embarrased" },
+
+            'trigger_gallery_onsen': { text: "이, 이건...! 으... 누가 찍은 거야?! 보, 보면 안돼!", emotion: "embarrased" }, // [v6.11] 수정
+            'trigger_gallery_mirage': { text: "또 놓쳤을 때 사진이잖아! ...다음엔 반드시, 반드시 잡고 말 거야!", emotion: "angry" }, // [v6.11] 수정
+            'trigger_gallery_academy_shy': { text: "아...!! 이건 아카데미 시절이잖아! 으... 이런 걸 왜 보고 있어!", emotion: "shy" }, // [v6.11] 수정
+            'trigger_gallery_academy_confident': { text: "흠! 역시 난 멋져! ...이때부터 대장의 풍모가 있었지.", emotion: "happy" },
+            'trigger_gallery_fennec': { text: "페넥 학생회장... 그때나 지금이나 여전히 멋있네. ...뭐! 뭘 보는 거야! 남의 갤러리를!", emotion: "smile" }, // [v6.11] 수정 -> [v6.12] 수정
+            'trigger_gallery_sexy': { text: "뭐, 뭐야!! 이, 이건 잠가 놨는데! 보지 마! 보지 말라고!!", emotion: "fearful" },
+            'trigger_gallery_lapin_fishing': { text: "하... 또 저 너구리... 저걸 왜 나한테 보낸 거지?", emotion: "serious" },
+            'trigger_gallery_mirage_selca': { text: "히익?!? 이, 이 사진이 왜 또 여깄어! 지웠는데! 지웠다고!! 저, 저 괴냥이가...!!!", emotion: "fearful" },
+
+            'trigger_start_op': { text: "좋아! 드디어 작전을 시작하는 거지?! 이번엔 저 괴냥이... 꼭 잡는 거야!", emotion: "happy" }
+        };
+        
+        // --- 전역 변수 및 공통 함수 (v6.2와 동일) ---
+        const chatBox = document.getElementById('pherro-bubble-container');
+        const homescreen = document.getElementById('homescreen');
+        const pherroView = document.getElementById('pherro-view');
+        let isFirstVisit = true;
+
+        function changePherroSprite(emotion) {
+            const imageUrl = pherroSprites[emotion] || pherroSprites['default'];
+            pherroView.style.backgroundImage = `url('${imageUrl}')`;
+        }
+
+        function pherroReacts(triggerKey) {
+            const reaction = pherroReactions[triggerKey];
+            if (!reaction) return;
+            changePherroSprite(reaction.emotion);
+            chatBox.innerHTML = ''; 
+            const newBubble = document.createElement('div');
+            newBubble.classList.add('pherro-bubble');
+            newBubble.innerText = "페로| " + reaction.text;
+            chatBox.appendChild(newBubble);
+        }
+
+        function openApp(appElement, reactionKey) {
+            homescreen.style.display = 'none';
+            appElement.style.display = 'flex';
+            if (reactionKey) { 
+                pherroReacts(reactionKey);
+            }
+        }
+
+        function closeApp(appElement) {
+            appElement.style.display = 'none';
+            homescreen.style.display = 'grid';
+            pherroReacts('trigger_return_home'); 
+        }
+        
+        // --- [v6.11] 앱 로직 수정 ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- [v6.2] 버그 수정된 클릭 로직 유지 ---
+
+            // --- 1. 메모장 앱 로직 (v6.9와 동일) ---
+            const iconMemo = document.getElementById('icon-memo'); 
+            const appMemo = document.getElementById('app-memo');
+            const closeMemo = document.getElementById('close-memo');
+            const appMemoContent = document.getElementById('app-memo-content');
+            const closeMemoContent = document.getElementById('close-memo-content');
+            const memoContentTitle = document.getElementById('memo-content-title');
+            const memoContentBody = document.getElementById('memo-content-body');
+            const memoItemFailure = document.getElementById('memo-item-failure');
+            const memoItemMystery = document.getElementById('memo-item-mystery');
+            const memoItemVault = document.getElementById('memo-item-vault'); 
+            const memoItemDiary = document.getElementById('memo-item-diary');
+
+            iconMemo.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                openApp(appMemo, 'trigger_memo_open');
+            });
+            closeMemo.addEventListener('click', () => closeApp(appMemo));
+
+            closeMemoContent.addEventListener('click', () => {
+                appMemoContent.style.display = 'none';
+                appMemo.style.display = 'flex';
+                pherroReacts('trigger_memo_open'); 
+            });
+
+            memoItemFailure.addEventListener('click', () => {
+                appMemo.style.display = 'none';
+                appMemoContent.style.display = 'flex';
+                memoContentTitle.innerText = "실패_보고서.txt";
+                memoContentBody.innerHTML = `
+                    <p><b>작전명:</b> 초강력 강아지 돌격 작전</p>
+                    <p><b>결과:</b> 실패.</p>
+                    <p><b>사유:</b> 괴도 미라쥬가... 너무 빨랐음.</p>
+                    <p>...</p><p>...</p><p>...</p>
+                    <p>정말 왜 안지워지는 거지?</p>`;
+                pherroReacts('trigger_failure');
+            });
+
+            memoItemMystery.addEventListener('click', () => {
+                appMemo.style.display = 'none';
+                appMemoContent.style.display = 'flex';
+                memoContentTitle.innerText = "3대_미스터리.txt";
+                memoContentBody.innerHTML = `
+                    <p><b>[경찰서 3대 미스터리]</b></p><br>
+                    <p>1. 경찰 대장의 비밀</p>
+                    <p>2. 7층의 금고</p>
+                    <p>3. 코넬 형사</p><br>
+                    <p>...더 읽으려고?</p>`;
+                pherroReacts('trigger_mystery_file');
+            });
+
+            memoItemVault.addEventListener('click', () => {
+                appMemo.style.display = 'none';
+                appMemoContent.style.display = 'flex';
+                memoContentTitle.innerText = "7층_금고_비번(추정).txt";
+                memoContentBody.innerHTML = `
+                    <p><b>[절대 까먹지 말 것!]</b></p><br>
+                    <p>1. 1234 (아님)</p>
+                    <p>2. 0000 (아님)</p>
+                    <p>3. 1111 (아님)</p>
+                    <p>4. 내 생일 (아님)</p>
+                    <p>5. DogBiscuit (아님!!)</p><br>
+                    <p>...대체 뭐야?!?</p>`;
+                pherroReacts('trigger_vault_note');
+            });
+
+            memoItemDiary.addEventListener('click', () => {
+                appMemo.style.display = 'none';
+                appMemoContent.style.display = 'flex';
+                memoContentTitle.innerText = "비밀 일기장 (잠금)";
+                memoContentBody.innerHTML = `
+                    <p><b>[X월 X일]</b></p><br>
+                    <p>정말... '그 녀석'은 바보야. 맨날 내 명령도 제대로 못 듣고!</p>
+                    <p>...그래도...</p>
+                    <p>이상하게 그 녀석이 옆에 있으면, 조금... 아주 조금은 든든한 것 같기도 하고.</p>
+                    <p>...칫! 내가 왜 이런 생각을 하는 거야!</p>
+                    <p>(...고맙다고는, 절대 말 안 해줄 거지만.)</p>`;
+                pherroReacts('trigger_diary');
+            });
+
+            // --- 2. 갤러리 앱 로직 (v6.7과 동일) ---
+            const iconGallery = document.getElementById('icon-gallery'); 
+            const appGallery = document.getElementById('app-gallery');
+            const closeGallery = document.getElementById('close-gallery');
+            const appGalleryDetail = document.getElementById('app-gallery-detail');
+            const closeGalleryDetail = document.getElementById('close-gallery-detail');
+            const galleryDetailTitle = document.getElementById('gallery-detail-title'); 
+            const galleryDetailContent = document.getElementById('gallery-detail-content'); 
+            
+            const galleryItemOnsen = document.getElementById('gallery-item-onsen');
+            const galleryItemMirage = document.getElementById('gallery-item-mirage');
+            const galleryItemAcademyShy = document.getElementById('gallery-item-academy-shy');
+            const galleryItemAcademyConfident = document.getElementById('gallery-item-academy-confident');
+            const galleryItemFennec = document.getElementById('gallery-item-fennec');
+            const galleryItemSexy = document.getElementById('gallery-item-sexy');
+            const galleryItemLapinFishing = document.getElementById('gallery-item-lapin-fishing');
+            const galleryItemMirageSelca = document.getElementById('gallery-item-mirage-selca');
+            
+            iconGallery.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                openApp(appGallery, 'trigger_gallery_open');
+            });
+            closeGallery.addEventListener('click', () => closeApp(appGallery));
+
+            closeGalleryDetail.addEventListener('click', () => {
+                appGalleryDetail.style.display = 'none';
+                appGallery.style.display = 'flex';
+                pherroReacts('trigger_gallery_open');
+            });
+
+            galleryItemOnsen.addEventListener('click', () => {
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "Zzz...";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/4ebb1d35-3d23-4847-88ca-da4cea8dbe7c.jpeg" alt="온천 사진">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        이게 언제 찍혔지? 분명히 온천에선 아무도...<br>
+                        ...잠깐, 그럼 이걸 네가?!
+                    </div>`;
+                pherroReacts('trigger_gallery_onsen');
+            });
+
+            galleryItemMirage.addEventListener('click', () => {
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "미라쥬 도주 사진";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/06928558-39bf-4f97-82dc-ef253251946f.png" alt="미라쥬 도주">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        이때... 분명히 다 잡았는데!<br>
+                        저 괴냥이, 다음엔 꼭 잡는다! (증거자료 1)
+                    </div>`;
+                pherroReacts('trigger_gallery_mirage');
+            });
+            
+            galleryItemAcademyShy.addEventListener('click', () => { // [v6.11] 메모 수정
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "아카데미 시절";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/70b6d548-c512-4130-bdb6-a702740f1668.png" alt="아카데미 소심">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        ...이런 시절 없었어! 없었다고!<br>
+                        (이 사진... 부끄러우니까 숨겨놔야지.)
+                    </div>`;
+                pherroReacts('trigger_gallery_academy_shy');
+            });
+
+            galleryItemAcademyConfident.addEventListener('click', () => {
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "대장 위엄샷"; 
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/23bc73e5-8b23-4acf-b7b5-be0be8784c57.png" alt="아카데미 당당">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        흠! 역시 난 멋져!<br>
+                        대장의 풍모가 느껴지지 않아?!
+                    </div>`;
+                pherroReacts('trigger_gallery_academy_confident');
+            });
+            
+            galleryItemFennec.addEventListener('click', () => { // [v6.11] 메모 동일
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "학생회장 페넥";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/e61c85ae-b502-40bc-b2c6-45858eeef0db.png" alt="페넥">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        아, 페넥 학생회장! 정말 멋있었지...<br>
+                        저렇게 조그만데도 항상 날 잘 챙겨줬어. (동경...)
+                    </div>`;
+                pherroReacts('trigger_gallery_fennec');
+            });
+            
+            galleryItemSexy.addEventListener('click', () => {
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "비밀♥";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/30a93d41-851b-411c-967f-a68075a5e7a1.jpeg" alt="섹시">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        (메모 없음)
+                    </div>`;
+                pherroReacts('trigger_gallery_sexy');
+            });
+
+            galleryItemLapinFishing.addEventListener('click', () => { 
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "라핀 낚시";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/680467da-a19c-4dff-a01d-c7b54bc52c4e.jpeg" alt="라핀 낚시">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        이 너구리... 갑자기 이걸 나한테 왜 보낸 거지?<br>
+                        분명히 일 안 하고 농땡이 피우는 중일 거야!
+                    </div>`;
+                pherroReacts('trigger_gallery_lapin_fishing');
+            });
+
+            galleryItemMirageSelca.addEventListener('click', () => { 
+                appGallery.style.display = 'none';
+                appGalleryDetail.style.display = 'flex';
+                galleryDetailTitle.innerText = "지워지지 않는 사진";
+                galleryDetailContent.innerHTML = `
+                    <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/3fe4dfe7-544a-410e-a078-b452c68272c2.jpeg" alt="미라쥬 셀카">
+                    <div class="image-memo">
+                        <strong>페로의 메모:</strong>
+                        지워도 지워도 다시 생긴다.<br>
+                        대체 어떻게... 내, 내 침대에...?!?
+                    </div>`;
+                pherroReacts('trigger_gallery_mirage_selca');
+            });
+
+            // --- 3. 메신저 앱 로직 (v6.8과 동일) ---
+            const iconMessenger = document.getElementById('icon-messenger'); 
+            const appMessenger = document.getElementById('app-messenger');
+            const closeMessenger = document.getElementById('close-messenger');
+            const appMessengerChat = document.getElementById('app-messenger-chat');
+            const closeMessengerChat = document.getElementById('close-messenger-chat');
+            const messengerChatTitle = document.getElementById('messenger-chat-title'); 
+            const messengerChatContent = document.getElementById('messenger-chat-content'); 
+            const messengerItemLapin = document.getElementById('messenger-item-lapin');
+            const messengerItemTeam = document.getElementById('messenger-item-team'); 
+            const messengerItemMirage = document.getElementById('messenger-item-mirage');
+
+            iconMessenger.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                openApp(appMessenger, 'trigger_messenger_open');
+            });
+            closeMessenger.addEventListener('click', () => closeApp(appMessenger));
+            
+            closeMessengerChat.addEventListener('click', () => {
+                appMessengerChat.style.display = 'none';
+                appMessenger.style.display = 'flex';
+                pherroReacts('trigger_messenger_open');
+            });
+
+            messengerItemLapin.addEventListener('click', () => {
+                appMessenger.style.display = 'none';
+                appMessengerChat.style.display = 'flex';
+                messengerChatTitle.innerText = "정보원_라핀";
+                messengerChatContent.innerHTML = `
+                    <div class="chat-bubble lapin"><b>라핀:</b> 그래서, 용건은?</div>
+                    <div class="chat-bubble pherro"><b>페로:</b> 야! 정보 내놔! 당장!</div>
+                    <div class="chat-bubble lapin"><b>라핀:</b> 귀찮아...</div>
+                    <div class="chat-bubble pherro"><b>페로:</b> 이 너구리가!!</div>`;
+                pherroReacts('trigger_lapin_chat');
+            });
+
+            messengerItemTeam.addEventListener('click', () => {
+                appMessenger.style.display = 'none';
+                appMessengerChat.style.display = 'flex';
+                messengerChatTitle.innerText = "미라쥬 체포 작전반 (3)";
+                messengerChatContent.innerHTML = `
+                    <div class="chat-bubble pherro"><b>페로:</b> 다들 복창해! 이번엔 무조건 잡는다!</div>
+                    <div class="chat-bubble"><b>경찰 1:</b> 넵!</div>
+                    <div class="chat-bubble"><b>경찰 2:</b> (읽음)</div>
+                    <div class="chat-bubble pherro"><b>페로:</b> 2팀!! 대답 안 해?!?</div>`;
+                pherroReacts('trigger_team_chat');
+            });
+            
+            messengerItemMirage.addEventListener('click', () => {
+                appMessenger.style.display = 'none';
+                appMessengerChat.style.display = 'flex';
+                messengerChatTitle.innerText = "???";
+                messengerChatContent.innerHTML = `
+                    <div class="chat-bubble lapin"><b>???:</b> 안녕, 강아지 대장님?</div>
+                    <div class="chat-bubble lapin"><b>???:</b> 어제 네 침대, 꽤 푹신하던데? (V)</div>
+                    <div class="chat-bubble lapin"><b>???:</b> 답장 안 해? 섭섭하네~</div>`;
+                pherroReacts('trigger_mirage_chat');
+            });
+
+            // --- [v6.10] '작전시작' 앱 로직 추가 ---
+            const iconStartOp = document.getElementById('icon-start-op');
+            const appStartOp = document.getElementById('app-start-op');
+            const closeStartOp = document.getElementById('close-start-op');
+
+            iconStartOp.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openApp(appStartOp, 'trigger_start_op');
+            });
+            closeStartOp.addEventListener('click', () => closeApp(appStartOp));
+
+
+            // --- 페이지 로드 시 첫 반응 실행 ---
+            if (isFirstVisit) {
+                pherroReacts('trigger_first_visit');
+                isFirstVisit = false;
+            }
+        });
+
+    </script>
+    </body>
+    </html>
