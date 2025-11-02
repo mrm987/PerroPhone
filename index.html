@@ -67,10 +67,7 @@
         
         /* [v6.19] 채팅 입력창 스타일 */
         .chat-input-area { width: 100%; padding: 10px; background-color: #2a2a4a; flex-shrink: 0; display: flex; border-top: 1px solid #5a5a7a; }
-        .chat-input { flex-grow: 1; padding: 8px; border: 1px solid #5a5a7a; border-radius: 5px; background-color: #1a1a3a; color: #eee; font-size: 14px; }
-        .chat-send-button { margin-left: 10px; padding: 8px 15px; background-color: #a0a0e0; color: #111; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .chat-send-button:disabled { background-color: #5a5a7a; color: #ccc; cursor: default; }
-        .chat-error-message { text-align: center; color: #ff5555; font-size: 12px; padding: 5px 0; }
+        .chat-input-placeholder { text-align: left; color: #888; font-size: 14px; padding: 8px 15px; border-radius: 5px; cursor: default; }
     </style>
 </head>
 <body>
@@ -154,8 +151,7 @@
                     <!-- JS가 여기에 chat-bubble div들을 생성 --></div>
                 <!-- [v6.19] 메신저 입력창 (답장 불가) -->
                 <div class="chat-input-area">
-                    <input type="text" class="chat-input" placeholder="답장할 수 없습니다.">
-                    <button class="chat-send-button" disabled>전송</button>
+                    <p class="chat-input-placeholder">답장할 수 없습니다.</p>
                 </div>
             </div>
 
@@ -311,6 +307,14 @@
             pherroReacts('trigger_return_home'); 
         }
         
+        // [v6.25] 앱 ID에 따른 반응 키 매핑 (onpopstate에서 사용)
+        const appIDToReaction = {
+            'app-memo': 'trigger_memo_open',
+            'app-gallery': 'trigger_gallery_open',
+            'app-messenger': 'trigger_messenger_open',
+            'app-start-op': 'trigger_start_op'
+        };
+
         // --- [v6.15] 모바일 '뒤로가기' (popstate) 이벤트 처리 ---
         window.onpopstate = function(event) {
             // 브라우저 뒤로가기가 눌렸을 때 실행됨
@@ -328,9 +332,15 @@
                     homescreen.style.display = 'grid';
                     pherroReacts('trigger_return_home');
                 } else {
-                    document.getElementById(targetAppId).style.display = 'flex';
+                    const targetAppElement = document.getElementById(targetAppId);
+                    targetAppElement.style.display = 'flex';
+                    // [v6.25] 복귀 시 페로 대사 갱신
+                    const reactionKey = appIDToReaction[targetAppId];
+                    if (reactionKey) {
+                        pherroReacts(reactionKey);
+                    }
                     // [v6.23] popstate로 돌아올 때 스크롤 초기화
-                    resetScroll(document.getElementById(targetAppId)); 
+                    resetScroll(targetAppElement); 
                 }
             } else {
                 // 스택이 비어있으면 (앱이 닫히고 홈스크린에 있을 때)
@@ -459,6 +469,8 @@
             galleryItemOnsen.addEventListener('click', () => {
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_onsen');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "Zzz...";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/4ebb1d35-3d23-4847-88ca-da4cea8dbe7c.jpeg" alt="온천 사진">
@@ -472,6 +484,8 @@
             galleryItemMirage.addEventListener('click', () => {
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_mirage');
+                 // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "미라쥬 도주 사진";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/06928558-39bf-4f97-82dc-ef253251946f.png" alt="미라쥬 도주">
@@ -485,6 +499,8 @@
             galleryItemAcademyShy.addEventListener('click', () => { // [v6.11] 메모 수정
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_academy_shy');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "아카데미 시절";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/70b6d548-c512-4130-bdb6-a702740f1668.png" alt="아카데미 소심">
@@ -498,6 +514,8 @@
             galleryItemAcademyConfident.addEventListener('click', () => {
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_academy_confident');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "대장 위엄샷"; 
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/23bc73e5-8b23-4acf-b7b5-be0be8784c57.png" alt="아카데미 당당"> <!-- [v6.21] 링크 오타 수정 완료 -->
@@ -511,6 +529,8 @@
             galleryItemFennec.addEventListener('click', () => { // [v6.11] 메모 동일
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_fennec');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "학생회장 페넥";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/e61c85ae-b502-40bc-b2c6-45858eeef0db.png" alt="페넥">
@@ -524,6 +544,8 @@
             galleryItemSexy.addEventListener('click', () => {
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_sexy');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "비밀♥";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/30a93d41-851b-411c-967f-a68075a5e7a1.jpeg" alt="섹시">
@@ -536,6 +558,8 @@
             galleryItemLapinFishing.addEventListener('click', () => { 
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_lapin_fishing');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "라핀 낚시";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/680467da-a19c-4dff-a01d-c7b54bc52c4e.jpeg" alt="라핀 낚시">
@@ -549,6 +573,8 @@
             galleryItemMirageSelca.addEventListener('click', () => { 
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_mirage_selca');
+                // [v6.23] 개별 항목 진입 시 스크롤 초기화
+                resetScroll(appGalleryDetail);
                 galleryDetailTitle.innerText = "지워지지 않는 사진";
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/3fe4dfe7-544a-410e-a078-b452c68272c2.jpeg" alt="미라쥬 셀카">
