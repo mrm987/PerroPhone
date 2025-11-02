@@ -46,7 +46,7 @@
         /* [v6.19] 갤러리 상세 화면의 가로 스크롤 방지를 위해 overflow-x: hidden 추가 */
         .app-content { padding: 15px; flex-grow: 1; overflow-y: auto; overflow-x: hidden; }
         .app-content img { width: 100%; height: auto; display: block; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 5px; }
-        .app-content-nopadding { flex-grow: 1; overflow-y: auto; overflow-x: hidden; }
+        .app-content-nopadding { padding: 15px; flex-grow: 1; overflow-y: auto; overflow-x: hidden; }
         .app-list { list-style: none; padding: 0; margin: 0; }
         .app-list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #3a3a5a; font-size: 16px; cursor: pointer; }
         .app-list-item:hover { background-color: #3a3a5a; }
@@ -233,6 +233,14 @@
         let isFirstVisit = true;
         // [v6.15] 현재 앱의 ID를 저장할 스택
         const appStack = []; 
+        
+        // [v6.23] 스크롤 위치 초기화 함수
+        function resetScroll(appElement) {
+            const contentElements = appElement.querySelectorAll('.app-content, .app-content-nopadding, #homescreen');
+            contentElements.forEach(el => {
+                el.scrollTop = 0;
+            });
+        }
 
         function changePherroSprite(emotion) {
             const imageUrl = pherroSprites[emotion] || pherroSprites['default'];
@@ -268,6 +276,8 @@
             if (reactionKey) { 
                 pherroReacts(reactionKey);
             }
+            // [v6.23] 앱 열 때 스크롤 초기화
+            resetScroll(appElement); 
         }
 
         function closeApp(appElement) {
@@ -279,15 +289,23 @@
                  homescreen.style.display = 'grid';
                  appStack.splice(0, appStack.length); // 홈으로 돌아가면 스택 초기화
                  history.pushState({ app: 'homescreen' }, '', '#homescreen'); // 홈스크린 상태 기록
+                 // [v6.23] 홈스크린 스크롤 초기화
+                 resetScroll(homescreen); 
             } else if (appElement.id === 'app-memo-content') {
                  document.getElementById('app-memo').style.display = 'flex';
                  appStack.pop();
+                 // [v6.23] 메모 목록으로 돌아갈 때 스크롤 초기화
+                 resetScroll(document.getElementById('app-memo'));
             } else if (appElement.id === 'app-gallery-detail') {
                  document.getElementById('app-gallery').style.display = 'flex';
                  appStack.pop();
+                 // [v6.23] 갤러리 목록으로 돌아갈 때 스크롤 초기화
+                 resetScroll(document.getElementById('app-gallery'));
             } else if (appElement.id === 'app-messenger-chat') {
                  document.getElementById('app-messenger').style.display = 'flex';
                  appStack.pop();
+                 // [v6.23] 메신저 목록으로 돌아갈 때 스크롤 초기화
+                 resetScroll(document.getElementById('app-messenger'));
             }
             
             pherroReacts('trigger_return_home'); 
@@ -311,7 +329,8 @@
                     pherroReacts('trigger_return_home');
                 } else {
                     document.getElementById(targetAppId).style.display = 'flex';
-                    // 이 때는 반응을 건너뜔 (앱 내부에서 이미 반응을 보였을 수 있으므로)
+                    // [v6.23] popstate로 돌아올 때 스크롤 초기화
+                    resetScroll(document.getElementById(targetAppId)); 
                 }
             } else {
                 // 스택이 비어있으면 (앱이 닫히고 홈스크린에 있을 때)
@@ -479,7 +498,7 @@
             galleryItemAcademyConfident.addEventListener('click', () => {
                 appGallery.style.display = 'none';
                 openApp(appGalleryDetail, 'trigger_gallery_academy_confident');
-                galleryDetailTitle.innerText = "대장의 위엄"; 
+                galleryDetailTitle.innerText = "대장 위엄샷"; 
                 galleryDetailContent.innerHTML = `
                     <img src="https://d394jeh9729epj.cloudfront.net/8EgrdR7PfMI-KKKOVUNQUVI5/23bc73e5-8b23-4acf-b7b5-be0be8784c57.png" alt="아카데미 당당"> <!-- [v6.21] 링크 오타 수정 완료 -->
                     <div class="image-memo">
